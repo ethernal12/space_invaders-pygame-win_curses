@@ -29,9 +29,17 @@ class GUI(App):
         # zapolni display z barvo, bela
         self.windowSurface.fill((0, 0, 0))
         # nariši ladjo
-        self.vesolje.ladja.izrisi_sliko(self.windowSurface,
-                                        self.vesolje.ladja.x * self.dx - (self.vesolje.ladja.velikost_x // 2),
-                                        self.width - self.vesolje.ladja.velikost_y)
+        ladja = pygame.image.load("src/domain/ladja.png")
+
+        velikost_ladje = pygame.transform.scale(ladja, (
+            self.vesolje.ladja.velikost_x * self.dx, self.vesolje.ladja.velikost_y * self.dy))
+
+        # Spremeni velikost
+
+        self.windowSurface.blit(velikost_ladje,
+                                ((self.vesolje.ladja.x * self.dx) - (self.vesolje.ladja.velikost_x * self.dx // 2),
+                                 (self.vesolje.sirina * self.dy) - (self.vesolje.ladja.velikost_y * self.dy)))
+
         pygame.display.update()
 
     def input_igralca(self):
