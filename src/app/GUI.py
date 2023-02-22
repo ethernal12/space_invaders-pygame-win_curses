@@ -25,8 +25,9 @@ class GUI(App):
         self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
 
     def narisi_igro(self):
-        velikost_ladje = (self.vesolje.sirina * self.dx) // 10
-
+        # relativna velikost ladje
+        velikost_ladje_x = self.vesolje.sirina // 6
+        velikost_ladje_y = self.vesolje.visina // 6
         pygame.display.set_caption("Space Invaders")
         # zapolni display z barvo, bela
         self.windowSurface.fill((0, 0, 0))
@@ -34,7 +35,7 @@ class GUI(App):
         ladja = pygame.image.load("src/domain/ladja.png")
 
         velikost_ladje = pygame.transform.scale(ladja, (
-            self.vesolje.ladja.velikost_x * self.dx, self.vesolje.ladja.velikost_y * self.dy))
+            velikost_ladje_x * self.dx, velikost_ladje_y * self.dy))
 
         # Spremeni velikost
 

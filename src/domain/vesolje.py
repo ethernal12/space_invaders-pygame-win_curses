@@ -16,8 +16,7 @@ class Vesolje:
 
     def __post_init__(self):
 
-        self.ladja = Ladja(x=self.sirina // 2, y=self.visina // 2, velikost_x=self.sirina // 6,
-                           velikost_y=self.visina // 6)
+        self.ladja = Ladja(x=self.sirina // 2, y=self.visina // 2)
 
     def omejitev_ladje(self):
 
