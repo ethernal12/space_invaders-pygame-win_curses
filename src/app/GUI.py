@@ -21,10 +21,12 @@ class GUI(App):
         # scaling factor dx, dy
         self.dx = 40
         self.dy = 40
-        self.vesolje = Vesolje(sirina=self.width // self.dx, visina=self.height // self.dy, dx=self.dx, dy=self.dy)
+        self.vesolje = Vesolje(sirina=self.width / self.dx, visina=self.height / self.dy, dx=self.dx, dy=self.dy)
         self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
 
     def narisi_igro(self):
+        velikost_ladje = (self.vesolje.sirina * self.dx) // 10
+
         pygame.display.set_caption("Space Invaders")
         # zapolni display z barvo, bela
         self.windowSurface.fill((0, 0, 0))

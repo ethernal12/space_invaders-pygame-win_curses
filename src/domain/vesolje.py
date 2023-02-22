@@ -20,7 +20,8 @@ class Vesolje:
                            velikost_y=self.visina // 6)
 
     def omejitev_ladje(self):
-        if self.ladja.x >= self.sirina - self.ladja.velikost_x / 2:
-            self.ladja.x = self.sirina - self.ladja.velikost_x / 2
-        elif self.ladja.x <= 0 + self.ladja.velikost_x / 2:
-            self.ladja.x = 0 + self.ladja.velikost_x / 2
+
+        if self.ladja.x >= self.sirina:
+            self.ladja.x = self.sirina
+        elif self.ladja.x <= 0:
+            self.ladja.x = 0

@@ -6,7 +6,7 @@ from app.GUI import GUI
 # adding directory to python path!
 sys.path.append(os.getcwd())
 
-app = GUI(600, 600)
+app = GUI(700, 700)
 app.inicializacija_igre()
 
 running = True
