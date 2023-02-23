@@ -25,8 +25,8 @@ class GUI(App):
 
     # TODO: DODANO ZARADI VIDNOSTI CELOTNE LADJE TUDI V SKRAJNI DESNI POZICIJI
     def omejitev_pozicije(self):
-        if self.vesolje.ladja.x >= 0.9:
-            self.vesolje.ladja.x = 0.9
+        if self.vesolje.ladja.x >= 1 - self.vesolje.ladja.velikost_x:
+            self.vesolje.ladja.x = 1 - self.vesolje.ladja.velikost_x
 
     def narisi(self):
         # relativna velikost ladje
