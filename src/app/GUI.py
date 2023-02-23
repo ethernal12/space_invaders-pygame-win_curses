@@ -23,6 +23,7 @@ class GUI(App):
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         return int(self.width * x), int(self.height * y)
 
+    # TODO: DODANO ZARADI VIDNOSTI CELOTNE LADJE TUDI V SKRAJNI DESNI POZICIJI
     def omejitev_pozicije(self):
         if self.vesolje.ladja.x >= 0.9:
             self.vesolje.ladja.x = 0.9
