@@ -6,11 +6,10 @@ from app.GUI import GUI
 # adding directory to python path!
 sys.path.append(os.getcwd())
 
-app = GUI(700, 700)
-app.inicializacija_igre()
+app = GUI(600, 600)
+app.init()
 
-running = True
-while running:
-    app.narisi_igro()
-    app.input_igralca()
+while not app.konec():
+    app.narisi()
+    app.vnos()
 

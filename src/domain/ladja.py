@@ -4,8 +4,14 @@ import pygame
 
 @dataclass
 class Ladja:
-    x: int
-    y: int
+    x: float
+    y: float
+    velikost_x: float
+    velikost_y: float
+    hitrost: float
 
-    def premikanje(self, smer):
-        self.x += smer
+    def levo(self):
+        self.x -= self.hitrost
+
+    def desno(self):
+        self.x += self.hitrost

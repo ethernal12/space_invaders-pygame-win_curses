@@ -1,65 +1,65 @@
-from app._app import App
+from src.app._app import App
 import sys
 import pygame
 from typing import Optional
 
-from domain.vesolje import Vesolje
+from src.domain.vesolje import Vesolje
 
 
 class GUI(App):
+
     def __init__(self, width: int, height: int):
         self.width = width
         self.height = height
-        self.dx: int = 0
-        self.dy: int = 0
         self.windowSurface: Optional[pygame.Surface] = None
         self.clock = pygame.time.Clock()
         self.ladja = None
 
-    def inicializacija_igre(self):
+    def init(self):
         pygame.init()
-        # scaling factor dx, dy
-        self.dx = 40
-        self.dy = 40
-        self.vesolje = Vesolje(sirina=self.width / self.dx, visina=self.height / self.dy, dx=self.dx, dy=self.dy)
+        self.vesolje = Vesolje()
         self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
 
-    def narisi_igro(self):
+    def _mapiraj(self, x: float, y: float) -> tuple[int]:
+        return int(self.width * x), int(self.height * y)
+
+    def omejitev_pozicije(self):
+        if self.vesolje.ladja.x >= 0.9:
+            self.vesolje.ladja.x = 0.9
+
+    def narisi(self):
         # relativna velikost ladje
-        velikost_ladje_x = self.vesolje.sirina // 6
-        velikost_ladje_y = self.vesolje.visina // 6
+
+        vl_x, vl_y = self._mapiraj(x=self.vesolje.ladja.velikost_x, y=self.vesolje.ladja.velikost_y)
+        v_x, v_y = self._mapiraj(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y)
         pygame.display.set_caption("Space Invaders")
         # zapolni display z barvo, bela
         self.windowSurface.fill((0, 0, 0))
-        # nariši ladjo
+        # Spremeni velikost
         ladja = pygame.image.load("src/domain/ladja.png")
 
-        velikost_ladje = pygame.transform.scale(ladja, (
-            velikost_ladje_x * self.dx, velikost_ladje_y * self.dy))
+        velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
-        # Spremeni velikost
-
-        self.windowSurface.blit(velikost_ladje,
-                                ((self.vesolje.ladja.x * self.dx) - (self.vesolje.ladja.velikost_x * self.dx // 2),
-                                 (self.vesolje.sirina * self.dy) - (self.vesolje.ladja.velikost_y * self.dy)))
-
+        # nariši ladjo
+        self.windowSurface.blit(velikost_ladje, (v_x, v_y - vl_y))
         pygame.display.update()
 
-    def input_igralca(self):
+    def vnos(self):
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_a]:
-            self.vesolje.ladja.premikanje(-1)
+            self.vesolje.ladja.levo()
             self.vesolje.omejitev_ladje()
+
         elif keys[pygame.K_d]:
-            self.vesolje.ladja.premikanje(1)
+            self.vesolje.ladja.desno()
             self.vesolje.omejitev_ladje()
+            self.omejitev_pozicije()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     sys.exit()
         pygame.display.update()
-        self.clock.tick(10)
+        self.clock.tick(1000)
 
     def konec(self):
         pass

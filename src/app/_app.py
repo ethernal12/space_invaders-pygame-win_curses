@@ -1,18 +1,23 @@
 from abc import ABC, abstractmethod
 
+
 class App(ABC):
     @abstractmethod
-    def inicializacija_igre(self):
+    def init(self):
         pass
 
     @abstractmethod
-    def narisi_igro(self):
+    def narisi(self):
         pass
 
     @abstractmethod
-    def input_igralca(self):
+    def vnos(self):
         pass
 
     @abstractmethod
     def konec(self):
+        pass
+
+    @abstractmethod
+    def _mapiraj(self, x: float, y: float) -> tuple[int]:
         pass
