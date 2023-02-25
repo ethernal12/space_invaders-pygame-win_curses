@@ -15,7 +15,7 @@ class Test_Vesolje(unittest.TestCase):
     def test_omejitev_ladje(self):
         self.vesolje.ladja.x = 1.1
 
-        self.assertEqual(self.vesolje.ladja.x, 0)
+        self.assertEqual(self.vesolje.ladja.x, 1.1)
 
         self.vesolje.omejitev_ladje()
 
