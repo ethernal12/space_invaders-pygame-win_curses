@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
+from src.domain.objekt import Objekt
+
 
 @dataclass
-class Strel:
-    x: float
-    y: float
+class Strel(Objekt):
+    pass

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 import pygame
 
+from src.domain.objekt import Objekt
+
 
 @dataclass
-class Ladja:
-    x: float
-    y: float
+class Ladja(Objekt):
     velikost_x: float
     velikost_y: float
     hitrost: float

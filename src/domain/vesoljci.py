@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
+from src.domain.objekt import Objekt
+
 
 @dataclass
-class Vesoljci:
-    x: float
-    y: float
+class Vesoljci(Objekt):
+    pass

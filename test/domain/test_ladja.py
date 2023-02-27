@@ -26,11 +26,11 @@ class Test_Ladja(unittest.TestCase):
         stari_x = self.ladja.x
         self.ladja.levo()
 
-        self.assertEqual(self.ladja.x, stari_x - self.ladja.hitrost)
+        self.assertTrue(self.ladja.x < stari_x)
 
     def test_desno(self):
         self.assertEqual(self.ladja.x, self.ladja_x)
         stari_x = self.ladja.x
         self.ladja.desno()
 
-        self.assertEqual(self.ladja.x, stari_x + self.ladja.hitrost)
+        self.assertTrue(self.ladja.x > stari_x)

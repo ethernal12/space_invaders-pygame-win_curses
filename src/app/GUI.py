@@ -24,7 +24,7 @@ class GUI(App):
         return int(self.width * x), int(self.height * y)
 
     # TODO: DODANO ZARADI VIDNOSTI CELOTNE LADJE TUDI V SKRAJNI DESNI POZICIJI
-    def omejitev_pozicije(self):
+    def _omejitev_pozicije(self):
         if self.vesolje.ladja.x >= 1 - self.vesolje.ladja.velikost_x:
             self.vesolje.ladja.x = 1 - self.vesolje.ladja.velikost_x
 
@@ -37,7 +37,7 @@ class GUI(App):
         # zapolni display z barvo, bela
         self.windowSurface.fill((0, 0, 0))
         # Spremeni velikost
-        ladja = pygame.image.load("src/domain/ladja.png")
+        ladja = pygame.image.load("data/media/ladja.png")
 
         velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
@@ -54,7 +54,7 @@ class GUI(App):
         elif keys[pygame.K_d]:
             self.vesolje.ladja.desno()
             self.vesolje.omejitev_ladje()
-            self.omejitev_pozicije()
+            self._omejitev_pozicije()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
@@ -62,5 +62,5 @@ class GUI(App):
         pygame.display.update()
         self.clock.tick(1000)
 
-    def konec(self):
+    def konec(self) -> None:
         pass
