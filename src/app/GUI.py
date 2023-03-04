@@ -16,8 +16,6 @@ class GUI(App):
 
     def __init__(self, width: int, height: int):
         # Define colors
-        self.WHITE = (255, 255, 255)
-        self.RED = (255, 0, 0)
         self.menu = None
         self.config_menu = None
         self.width = width
@@ -65,10 +63,6 @@ class GUI(App):
         self.menu.add.button(config.CONFIG.meni_config, self.config_menu)
         self.menu.add.button(config.CONFIG.meni_izhod, pygame_menu.events.EXIT)
         self.menu.enable()
-
-    def onselect(self, mouse, widget):
-        value, index = widget.get_value()
-        print(f'Selected item value: {value}, index: {index}')
 
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         return int(self.width * x), int(self.height * y)
