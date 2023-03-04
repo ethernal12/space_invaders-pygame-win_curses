@@ -17,13 +17,14 @@ class Config:
     meni_igraj: str
     meni_config: str
     meni_izhod: str
+    theme_color: str
     # vesolje atributi
     pozicija_ladje_x: int
     pozicija_ladje_y: int
     velikost_ladje_x: int
     velikost_ladje_y: int
     hitrost_ladje: int
-    theme_color: str
+
 
 
 this = sys.modules[__name__]

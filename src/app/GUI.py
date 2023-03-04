@@ -30,9 +30,11 @@ class GUI(App):
 
     def init(self):
         pygame.init()
+        # zaznaj resolucijo zaslona
         self.vesolje = Vesolje()
         self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
         self.font = pygame.font.Font(config.CONFIG.font_type, config.CONFIG.font_size)
+
         theme = pygame_menu.themes.THEME_BLUE
         if config.CONFIG.theme_color == 'THEME_BLUE':
             theme = pygame_menu.themes.THEME_BLUE
@@ -46,8 +48,8 @@ class GUI(App):
         self.config_menu.add.dropselect("Velikost zaslona ", items=[
             ('400x400', [400, 400]),
             ('600x600', [600, 600]),
-            ('800x800', [800, 800])
-        ], onchange=lambda _, vrednost: self.ponastavi_velikost(vrednost))
+            ('700x700', [700, 700])
+        ], onchange=lambda _, zaslona: self.ponastavi_velikost(zaslona))
 
         self.config_menu.add.dropselect("Barva menija", items=[
             ('Blue', "THEME_BLUE"),
@@ -64,7 +66,7 @@ class GUI(App):
         self.menu.add.button(config.CONFIG.meni_izhod, pygame_menu.events.EXIT)
         self.menu.enable()
 
-    def onselect(self, mouse, widget, menu):
+    def onselect(self, mouse, widget):
         value, index = widget.get_value()
         print(f'Selected item value: {value}, index: {index}')
 
