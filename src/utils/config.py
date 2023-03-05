@@ -1,14 +1,16 @@
 import sys
 from dataclasses import dataclass, asdict
 import json
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from src.utils import pot
 
 
 @dataclass
 class Config:
     # gui atributi
-    gui_velikost: List[Dict[str, int]]
+    barve: Dict[str, List[int]]
+    gui_velikost: Dict[str, int]
+    ime_igralca: str
     naslov_igre: str
     font_type: str
     font_size: int
@@ -24,7 +26,6 @@ class Config:
     velikost_ladje_x: int
     velikost_ladje_y: int
     hitrost_ladje: int
-
 
 
 this = sys.modules[__name__]

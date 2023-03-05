@@ -9,12 +9,11 @@ sys.path.append(os.getcwd())
 
 config.init()
 app = GUI(
-    config.CONFIG.gui_velikost[0]["gui_width"],
-    config.CONFIG.gui_velikost[0]["gui_height"])
+    config.CONFIG.gui_velikost["gui_width"],
+    config.CONFIG.gui_velikost["gui_height"])
 app.init()
 
 while not app.konec():
     app.narisi()
     app.vnos()
-
 config.save()
