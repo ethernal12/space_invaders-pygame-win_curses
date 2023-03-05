@@ -32,6 +32,7 @@ class GUI(App):
 
     def init(self):
         pygame.init()
+        # vrni največjo dovoljeno resolucijo displaya
         self.info = pygame.display.Info()
         self.vesolje = Vesolje()
         self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
