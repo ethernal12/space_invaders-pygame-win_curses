@@ -12,7 +12,7 @@ class Vesolje:
     vesoljci: Vesoljci = None
 
     def __post_init__(self):
-
+        config.init()
         self.ladja = Ladja(x=config.CONFIG.pozicija_ladje_x,
                            y=config.CONFIG.pozicija_ladje_y,
                            velikost_x=config.CONFIG.velikost_ladje_x,
