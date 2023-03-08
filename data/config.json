@@ -1,38 +1,56 @@
 {
-  "barve": {
-    "crna": [
-      0,
-      0,
-      0
+  "jezik": "slovenski",
+  "igralec": {
+    "ime": "Danijel"
+  },
+  "pygame": {
+    "dimenzija": {
+      "sirina": 600,
+      "visina": 600
+    },
+    "barve": {
+      "rdeca": [
+        255,
+        255,
+        0
+      ],
+      "bela": [
+        255,
+        255,
+        255
+      ],
+      "crna": [
+        0,
+        0,
+        0
+      ]
+    },
+    "dimenzije": [
+      {
+        "sirina": 400,
+        "visina": 600
+      },
+      {
+        "sirina": 600,
+        "visina": 600
+      },
+      {
+        "sirina": 700,
+        "visina": 700
+      }
     ],
-    "bela": [
-      255,
-      255,
-      255
-    ],
-    "rdeca": [
-      255,
-      0,
-      0
+    "font": {
+      "velikost": 30,
+      "tip": "freesansbold.ttf"
+    },
+    "izbira_jezika": [
+      {
+        "jezik": "slovenski"
+      },
+      {
+        "jezik": "english"
+      }
     ]
   },
-  "gui_velikost": {
-    "gui_width": 700,
-    "gui_height": 700
-  },
-  "ime_igralca": "danijel",
-  "naslov_igre": "Space Invaders",
-  "font_type": "freesansbold.ttf",
-  "font_size": 30,
-  "meni_ime": "Ime: ",
-  "default_ime": " Janez",
-  "meni_igraj": "Igraj",
-  "meni_config": "Konfig",
-  "meni_izhod": "Izhod",
-  "theme_color": "THEME_ORANGE",
-  "pozicija_ladje_x": 0.5,
-  "pozicija_ladje_y": 1,
-  "velikost_ladje_x": 0.1,
-  "velikost_ladje_y": 0.1,
-  "hitrost_ladje": 0.003
+  "curses": {}
 }

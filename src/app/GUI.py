@@ -1,105 +1,112 @@
-import os
-
 import pygame_menu.widgets.core
-from pygame import Cursor
 
 from src.app._app import App
 import sys
 import pygame
 import pygame_menu
 
-from typing import Optional
-
 from src.domain.vesolje import Vesolje
-from src.utils import pot, config
+from src.utils import pot
+from src.settings import config as S
 
 
 class GUI(App):
 
-    def __init__(self, width: int, height: int):
-        self.width = width
-        self.height = height
-        self.menu = None
-        self.config_menu = None
-        self.windowSurface: Optional[pygame.Surface] = None
-        self.clock = pygame.time.Clock()
-        self.ladja = None
-        self.font = None
-        self.vesolje = None
-        self.info = None
-        self.ime_igralca = None
-        self.opozorilo = None
-
-    def init(self):
+    def __init__(self, sirina: int, visina: int):
+        self.sirina = sirina
+        self.visina = visina
         pygame.init()
-        # vrni največjo dovoljeno resolucijo displaya
+        # informacijo o največji dovoljeni resoluciji zaslona
         self.info = pygame.display.Info()
-        self.vesolje = Vesolje()
-        self.windowSurface = pygame.display.set_mode((self.width, self.height), 0, 32)
-        self.font = pygame.font.Font(config.CONFIG.font_type, config.CONFIG.font_size)
-        theme = pygame_menu.themes.THEME_BLUE
-        if config.CONFIG.theme_color == 'THEME_BLUE':
-            theme = pygame_menu.themes.THEME_BLUE
-        elif config.CONFIG.theme_color == 'THEME_ORANGE':
-            theme = pygame_menu.themes.THEME_ORANGE
-        elif config.CONFIG.theme_color == 'THEME_DARK':
-            theme = pygame_menu.themes.THEME_DARK
+        self.font_velikost = S.CONFIG.pygame.font.velikost
+        self.font_tip = S.CONFIG.pygame.font.tip
 
-        # inicializacija configuracijskega menija
-        self.config_menu = pygame_menu.Menu('Konfiguracija', self.width, self.height,
-                                            theme=theme)
-        self.config_menu.add.dropselect("Velikost zaslona ", items=[
-            ('400x400', [400, 400]),
-            ('600x600', [600, 600]),
-            ('700x700', [700, 700]),
-            ('full screen', [self.info.current_w, self.info.current_h])
-        ], onchange=lambda _, velikost: self._nastavi_zaslon(velikost))
+        self.surface = pygame.display.set_mode((self.sirina, self.visina), 0, 32)
 
-        self.config_menu.add.dropselect("Barva menija", items=[
-            ('Blue', "THEME_BLUE"),
-            ('Orange', "THEME_ORANGE"),
-            ('Dark', 'THEME_DARK')
-        ], onchange=lambda _, vrednost: self._ponastavi(atribut='theme_color', vrednost=vrednost))
-        self.config_menu.add.button("Nazaj", pygame_menu.events.BACK)
+        # TODO: V PYGAME.CONFIG USTVARI DEFAULT THEME ZA VSE MENIJE PRI INICIALIZACIJI
+        self.menu = pygame_menu.Menu(
+            S.JEZIK.aplikacija.naslov,
+            self.sirina,
+            self.visina,
+            theme=pygame_menu.themes.THEME_ORANGE
+        )
 
-        # inicializacija glavnega menija
-        self.menu = pygame_menu.Menu(config.CONFIG.naslov_igre, self.width, self.height,
-                                     theme=theme)
-        self.opozorilo = self.menu.add.label("Vpiši svoje ime in pritisni enter:", font_size=20,
-                                             font_color=(config.CONFIG.barve["crna"]),
-                                             background_color=config.CONFIG.barve["bela"])
-        self.ime_igralca = self.menu.add.text_input(config.CONFIG.meni_ime,
-                                                    onreturn=lambda vrednost: self._nastavi_ime(atribut='ime_igralca',
-                                                                                                vrednost=vrednost))
-        self.menu.add.button(config.CONFIG.meni_igraj, self._zazeni_igro)
-        self.menu.add.button(config.CONFIG.meni_config, self.config_menu)
-        self.menu.add.button(config.CONFIG.meni_izhod, pygame_menu.events.EXIT)
+        self.config_menu = pygame_menu.Menu(
+            S.JEZIK.meni.konfiguracija,
+            S.CONFIG.pygame.dimenzija.sirina,
+            S.CONFIG.pygame.dimenzija.visina,
+            theme=pygame_menu.themes.THEME_ORANGE
+        )
+
+        self.font = pygame.font.Font(
+            S.CONFIG.pygame.font.tip,
+            S.CONFIG.pygame.font.velikost
+        )
+
+        self.clock = pygame.time.Clock()
+
+        self.vnesi_ime_label = None
+
+        self.vesolje = None
+
+        self._init_meni()
+        self._init_config_meni()
         self.menu.enable()
 
+    def _init_meni(self):
+        # inicializacija glavnega menija
+        self.vnesi_ime_label = self.menu.add.label(S.JEZIK.meni.vnesi_ime, background_color=S.CONFIG.pygame.barve.bela)
+        self.ime_igralca = self.menu.add.text_input(S.JEZIK.meni.ime,
+                                                    onreturn=lambda ime: self._nastavi_ime(ime=ime))
+        self.menu.add.button(S.JEZIK.meni.igraj, self._zazeni_igro)
+        self.menu.add.button(S.JEZIK.meni.konfiguracija, self.config_menu)
+        self.menu.add.button(S.JEZIK.meni.izhod, pygame_menu.events.EXIT)
+
+    def _init_config_meni(self):
+        # VELIKOSTI ZASLONA
+        velikosti = [(S.JEZIK.meni_konfiguracija.zaslon.fullscreen, [self.info.current_w, self.info.current_h])]
+        jeziki = []
+        for dim in S.CONFIG.pygame.dimenzije:
+            velikosti.append((f"{dim.sirina} x {dim.visina}", [dim.sirina, dim.visina]))
+        print(velikosti)
+        for izbira in S.CONFIG.pygame.izbira_jezika:
+            jeziki.append((izbira.jezik, [izbira.jezik]))
+        print(jeziki)
+
+        self.config_menu.add.dropselect(S.JEZIK.meni_konfiguracija.zaslon.velikost, items=velikosti,
+                                        onchange=lambda _, velikost: self._nastavi_zaslon(velikost))
+        self.config_menu.add.dropselect(S.JEZIK.meni_konfiguracija.jezik, items=jeziki,
+                                        onchange=lambda _, tip: self._nastavi_jezik(tip))
+        self.config_menu.add.button(S.JEZIK.nazaj, pygame_menu.events.BACK)
+
+    def init(self):
+        self.vesolje = Vesolje()
+
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
-        return int(self.width * x), int(self.height * y)
+        return int(self.sirina * x), int(self.visina * y)
 
     def _omejitev_pozicije(self):
-        if self.vesolje.ladja.x >= 1 - config.CONFIG.velikost_ladje_x:
-            self.vesolje.ladja.x = 1 - config.CONFIG.velikost_ladje_x
+        sirina = 1 - self.vesolje.ladja.velikost_x
+        if self.vesolje.ladja.x >= sirina:
+            self.vesolje.ladja.x = sirina
 
     def narisi(self):
         if self.menu.is_enabled():
-            self.menu.draw(self.windowSurface)
+            self.menu.draw(self.surface)
 
         else:
             vl_x, vl_y = self._mapiraj(x=self.vesolje.ladja.velikost_x, y=self.vesolje.ladja.velikost_y)
             v_x, v_y = self._mapiraj(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y)
-            pygame.display.set_caption(config.CONFIG.naslov_igre)
+            pygame.display.set_caption(S.JEZIK.aplikacija.naslov)
             # zapolni display z barvo, črna
-            self.windowSurface.fill(config.CONFIG.barve["crna"])
+            self.surface.fill(S.CONFIG.pygame.barve.crna)
             # Spremeni velikost
             ladja = pygame.image.load(pot.data("media", "ladja.png"))
 
             velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
             # nariši ladjo
-            self.windowSurface.blit(velikost_ladje, (v_x, v_y - vl_y))
+            self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
         pygame.display.update()
 
     def vnos(self):
@@ -136,24 +143,24 @@ class GUI(App):
 
     def _izrisi_text(self, naslov: str, tekst: str, pozicija_x: int, pozicija_y: int):
         # Ustvari text podlago
-        text_podlaga = self.font.render(f'{naslov} {tekst}', True, config.CONFIG.barve["bela"])
+        text_podlaga = self.font.render(f'{naslov} {tekst}', True, S.CONFIG.pygame.barve.bela)
         # Nariši text na canvas
-        self.windowSurface.blit(text_podlaga, (pozicija_x, pozicija_y))
+        self.surface.blit(text_podlaga, (pozicija_x, pozicija_y))
 
     def _zazeni_igro(self):
         self.menu.disable()
 
-    def _ponastavi(self, atribut: str, vrednost: int):
-        setattr(config.CONFIG, atribut, vrednost)
-        config.save()
-
-    def _nastavi_ime(self, atribut: str, vrednost: int):
-        setattr(config.CONFIG, atribut, vrednost)
-        config.save()
+    def _nastavi_ime(self, ime: str):
+        S.CONFIG.igralec.ime = ime
+        S.save()
         self.ime_igralca.hide()
-        self.opozorilo.hide()
+        self.vnesi_ime_label.hide()
 
-    def _nastavi_zaslon(self, zaslona: list):
-        config.CONFIG.gui_velikost["gui_width"] = zaslona[0]
-        config.CONFIG.gui_velikost["gui_height"] = zaslona[1]
-        config.save()
+    def _nastavi_zaslon(self, velikost_zaslona: list):
+        S.CONFIG.pygame.dimenzija.sirina = velikost_zaslona[0]
+        S.CONFIG.pygame.dimenzija.visina = velikost_zaslona[1]
+        S.save()
+
+    def _nastavi_jezik(self, jezik: str):
+        S.CONFIG.jezik = jezik[0]
+        S.save()
