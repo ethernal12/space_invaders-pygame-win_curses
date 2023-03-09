@@ -1,1 +1,35 @@
-{"jezik": "english", "igralec": {"ime": "danijel"}, "pygame": {"dimenzija": {"sirina": 400, "visina": 600}, "dimenzije": [{"sirina": 400, "visina": 600}, {"sirina": 600, "visina": 600}, {"sirina": 700, "visina": 700}], "izbira_jezika": [{"jezik": "slovenski"}, {"jezik": "english"}]}, "curses": {}}
+{
+  "jezik": "english",
+  "igralec": {
+    "ime": "Danijel"
+  },
+  "pygame": {
+    "dimenzija": {
+      "sirina": 600,
+      "visina": 600
+    },
+    "dimenzije": [
+      {
+        "sirina": 400,
+        "visina": 400
+      },
+      {
+        "sirina": 600,
+        "visina": 600
+      },
+      {
+        "sirina": 700,
+        "visina": 700
+      }
+    ],
+    "izbira_jezika": [
+      {
+        "jezik": "slovenski"
+      },
+      {
+        "jezik": "english"
+      }
+    ]
+  },
+  "curses": {}
+}
