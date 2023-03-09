@@ -8,10 +8,7 @@ from src.app.GUI import GUI
 from src.settings import config as S
 
 S.init()
-app = GUI(
-    S.CONFIG.pygame.dimenzija.sirina,
-    S.CONFIG.pygame.dimenzija.visina
-)
+app = GUI()
 app.init()
 
 while not app.konec():

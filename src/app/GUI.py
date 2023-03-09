@@ -12,16 +12,16 @@ from src.settings import config as S
 
 class GUI(App):
 
-    def __init__(self, sirina: int, visina: int):
-        self.sirina = sirina
-        self.visina = visina
+    def __init__(self):
+        self.sirina = S.CONFIG.pygame.dimenzija.sirina
+        self.visina = S.CONFIG.pygame.dimenzija.visina
         pygame.init()
 
         # NAJVEČJA DOVOLJENA RESOLUCIJA
         self.info = pygame.display.Info()
         self.surface = pygame.display.set_mode((self.sirina, self.visina), 0, 32)
 
-        # IZBIRA TEME ZA MENIJE
+        # IZBIRA BARVNE TEME ZA MENIJE
         self.theme = pygame_menu.themes.THEME_BLUE
 
         self.menu = pygame_menu.Menu(
