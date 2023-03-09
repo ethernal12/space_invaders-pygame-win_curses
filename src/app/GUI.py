@@ -98,14 +98,14 @@ class GUI(App):
             vl_x, vl_y = self._mapiraj(x=self.vesolje.ladja.velikost_x, y=self.vesolje.ladja.velikost_y)
             v_x, v_y = self._mapiraj(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y)
             pygame.display.set_caption(S.JEZIK.aplikacija.naslov)
-            # zapolni display z barvo, črna
+            # ZAPOLNI DISPLAY Z BARVO, ČRNA
             self.surface.fill(S.APP.barve.crna)
-            # Spremeni velikost
+            # SPREMENI VELIKOST
             ladja = pygame.image.load(pot.data("media", "ladja.png"))
 
             velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
-            # nariši ladjo
+            # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
         pygame.display.update()
 
@@ -114,7 +114,7 @@ class GUI(App):
         if self.menu.is_enabled():
             self.menu.update(events)
             return
-        # spremljaj inpute v igri
+        # SPREMLJAJ INPUTE V IGRI
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
@@ -133,7 +133,7 @@ class GUI(App):
             self.vesolje.omejitev_ladje()
             self._omejitev_pozicije()
 
-        # preveri če je pritisnjen kateri gumb na meniju
+        # PREVERI ČE JE PRITISNJEN KATERI GUMB NA MENIJU
 
         pygame.display.update()
         self.clock.tick(S.APP.nastavitve.clock_tick)
@@ -142,9 +142,9 @@ class GUI(App):
         pass
 
     def _izrisi_text(self, naslov: str, tekst: str, pozicija_x: int, pozicija_y: int):
-        # Ustvari text podlago
+        # USTVARI TEXT PODLAGO
         text_podlaga = self.font.render(f'{naslov} {tekst}', True, S.APP.barve.bela)
-        # Nariši text na canvas
+        # NARIŠI TEXT NA CANVAS
         self.surface.blit(text_podlaga, (pozicija_x, pozicija_y))
 
     def _zazeni_igro(self):
