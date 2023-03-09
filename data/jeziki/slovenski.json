@@ -1,0 +1,20 @@
+{
+  "aplikacija": {
+    "naslov": "Space Invaders"
+  },
+  "nazaj": "Nazaj",
+  "meni": {
+    "konfiguracija": "Konfiguracija",
+    "igraj": "Igraj",
+    "izhod": "Izhod",
+    "vnesi_ime": "Vnesi svoje ime",
+    "ime": "Ime:"
+  },
+  "meni_konfiguracija": {
+    "zaslon": {
+      "velikost": "Velikost zaslona",
+      "fullscreen": "Celotni zaslon"
+    },
+    "jezik": "Izberi jezik"
+  }
+}
