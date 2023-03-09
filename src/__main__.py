@@ -1,11 +1,11 @@
 import sys
 import os
 
-from app.GUI import GUI
-from src.settings import config as S
-
 # adding directory to python path!
 sys.path.append(os.getcwd())
+
+from src.app.GUI import GUI
+from src.settings import config as S
 
 S.init()
 app = GUI(
