@@ -1,0 +1,27 @@
+{
+  "nastavitve": {
+    "clock_tick": 60
+  },
+  "barve": {
+    "rdeca": [
+      255,
+      255,
+      0
+    ],
+    "bela": [
+      255,
+      255,
+      255
+    ],
+    "crna": [
+      0,
+      0,
+      0
+    ]
+  },
+  "font": {
+    "velikost": 30,
+    "tip": "freesansbold.ttf"
+  }
+}
+

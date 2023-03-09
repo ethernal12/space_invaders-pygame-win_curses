@@ -16,31 +16,31 @@ class GUI(App):
         self.sirina = sirina
         self.visina = visina
         pygame.init()
-        # informacijo o največji dovoljeni resoluciji zaslona
-        self.info = pygame.display.Info()
-        self.font_velikost = S.CONFIG.pygame.font.velikost
-        self.font_tip = S.CONFIG.pygame.font.tip
 
+        # NAJVEČJA DOVOLJENA RESOLUCIJA
+        self.info = pygame.display.Info()
         self.surface = pygame.display.set_mode((self.sirina, self.visina), 0, 32)
 
-        # TODO: V PYGAME.CONFIG USTVARI DEFAULT THEME ZA VSE MENIJE PRI INICIALIZACIJI
+        # IZBIRA TEME ZA MENIJE
+        self.theme = pygame_menu.themes.THEME_BLUE
+
         self.menu = pygame_menu.Menu(
             S.JEZIK.aplikacija.naslov,
             self.sirina,
             self.visina,
-            theme=pygame_menu.themes.THEME_ORANGE
+            theme=self.theme
         )
 
         self.config_menu = pygame_menu.Menu(
             S.JEZIK.meni.konfiguracija,
             S.CONFIG.pygame.dimenzija.sirina,
             S.CONFIG.pygame.dimenzija.visina,
-            theme=pygame_menu.themes.THEME_ORANGE
+            theme=self.theme
         )
 
         self.font = pygame.font.Font(
-            S.CONFIG.pygame.font.tip,
-            S.CONFIG.pygame.font.velikost
+            S.APP.font.tip,
+            S.APP.font.velikost
         )
 
         self.clock = pygame.time.Clock()
@@ -54,8 +54,8 @@ class GUI(App):
         self.menu.enable()
 
     def _init_meni(self):
-        # inicializacija glavnega menija
-        self.vnesi_ime_label = self.menu.add.label(S.JEZIK.meni.vnesi_ime, background_color=S.CONFIG.pygame.barve.bela)
+        # INICIALIZACIJA GLAVNEGA MENIJA
+        self.vnesi_ime_label = self.menu.add.label(S.JEZIK.meni.vnesi_ime, background_color=S.APP.barve.bela)
         self.ime_igralca = self.menu.add.text_input(S.JEZIK.meni.ime,
                                                     onreturn=lambda ime: self._nastavi_ime(ime=ime))
         self.menu.add.button(S.JEZIK.meni.igraj, self._zazeni_igro)
@@ -65,13 +65,13 @@ class GUI(App):
     def _init_config_meni(self):
         # VELIKOSTI ZASLONA
         velikosti = [(S.JEZIK.meni_konfiguracija.zaslon.fullscreen, [self.info.current_w, self.info.current_h])]
-        jeziki = []
+
         for dim in S.CONFIG.pygame.dimenzije:
             velikosti.append((f"{dim.sirina} x {dim.visina}", [dim.sirina, dim.visina]))
-        print(velikosti)
+        # IZBIRA JEZIKA
+        jeziki = []
         for izbira in S.CONFIG.pygame.izbira_jezika:
             jeziki.append((izbira.jezik, [izbira.jezik]))
-        print(jeziki)
 
         self.config_menu.add.dropselect(S.JEZIK.meni_konfiguracija.zaslon.velikost, items=velikosti,
                                         onchange=lambda _, velikost: self._nastavi_zaslon(velikost))
@@ -99,7 +99,7 @@ class GUI(App):
             v_x, v_y = self._mapiraj(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y)
             pygame.display.set_caption(S.JEZIK.aplikacija.naslov)
             # zapolni display z barvo, črna
-            self.surface.fill(S.CONFIG.pygame.barve.crna)
+            self.surface.fill(S.APP.barve.crna)
             # Spremeni velikost
             ladja = pygame.image.load(pot.data("media", "ladja.png"))
 
@@ -136,14 +136,14 @@ class GUI(App):
         # preveri če je pritisnjen kateri gumb na meniju
 
         pygame.display.update()
-        self.clock.tick(1000)
+        self.clock.tick(S.APP.nastavitve.clock_tick)
 
     def konec(self) -> None:
         pass
 
     def _izrisi_text(self, naslov: str, tekst: str, pozicija_x: int, pozicija_y: int):
         # Ustvari text podlago
-        text_podlaga = self.font.render(f'{naslov} {tekst}', True, S.CONFIG.pygame.barve.bela)
+        text_podlaga = self.font.render(f'{naslov} {tekst}', True, S.APP.barve.bela)
         # Nariši text na canvas
         self.surface.blit(text_podlaga, (pozicija_x, pozicija_y))
 
@@ -161,6 +161,6 @@ class GUI(App):
         S.CONFIG.pygame.dimenzija.visina = velikost_zaslona[1]
         S.save()
 
-    def _nastavi_jezik(self, jezik: str):
+    def _nastavi_jezik(self, jezik: list):
         S.CONFIG.jezik = jezik[0]
         S.save()

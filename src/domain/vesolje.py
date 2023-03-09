@@ -15,7 +15,7 @@ class Vesolje:
                            y=1,
                            velikost_x=0.1,
                            velikost_y=0.1,
-                           hitrost=0.003
+                           hitrost=0.009
                            )
 
     def omejitev_ladje(self):

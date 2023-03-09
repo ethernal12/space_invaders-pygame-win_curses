@@ -2,7 +2,6 @@ import sys
 from dataclasses import dataclass, asdict
 import json
 
-from src.settings.app import App
 from src.utils import pot
 from src.settings.jeziki import Jezik
 
@@ -36,6 +35,7 @@ class BarveConfig:
     bela: list[int]
     crna: list[int]
 
+
 @dataclass
 class JezikConfig:
     jezik: str
@@ -44,15 +44,12 @@ class JezikConfig:
 @dataclass
 class PyGameConfig:
     dimenzija: DimenzijaConfig
-    barve: BarveConfig
     dimenzije: list[DimenzijaConfig]
-    font: FontConfig
     izbira_jezika: list[JezikConfig]
 
     def __post_init__(self):
         self.dimenzija = DimenzijaConfig(**self.dimenzija)
-        self.font = FontConfig(**self.font)
-        self.barve = BarveConfig(**self.barve)
+
         for i in range(len(self.dimenzije)):
             self.dimenzije[i] = DimenzijaConfig(**self.dimenzije[i])
         for i in range(len(self.izbira_jezika)):
@@ -77,34 +74,48 @@ class Config:
         self.curses = CursesConfig(**self.curses)
 
 
+@dataclass
+class NastavitveConfig:
+    clock_tick: int
+
+
+@dataclass
+class App:
+    nastavitve: NastavitveConfig
+    barve: BarveConfig
+    font: FontConfig
+
+    def __post_init__(self):
+        self.nastavitve = NastavitveConfig(**self.nastavitve)
+        self.font = FontConfig(**self.font)
+        self.barve = BarveConfig(**self.barve)
+
+
 this = sys.modules[__name__]
 this.CONFIG: Config = None
 this.JEZIK: Jezik = None
 this.APP: App = None
+print(pot.data)
 this.jeziki_dir = pot.data("jeziki")
 this.config_path = pot.data("config.json")
-this.app_path = pot.data("app.json")
+this.app_path = pot.data(".app.json")
 
-
-# file_dict = json.loads(file_txt) pretvori json object v pytoh object, ki ga lahko uporablja program
 def init():
     file = this.config_path.open("r")
     file_txt = file.read()
     file_dict = json.loads(file_txt)
     this.CONFIG = Config(**file_dict)
 
-    # file = this.app_path.open("r")
-    # file_txt = file.read()
-    # file_dict = json.loads(file_txt)
-    # this.CONFIG = Config(**file_dict)
-
+    file = this.app_path.open("r")
+    file_txt = file.read()
+    file_dict = json.loads(file_txt)
+    this.APP = App(**file_dict)
     jezik_file = this.jeziki_dir.joinpath(f"{this.CONFIG.jezik}.json").open("r")
     jezik_txt = jezik_file.read()
     jezik_dict = json.loads(jezik_txt)
     this.JEZIK = Jezik(**jezik_dict)
+print(pot.data())
 
-
-# save() pretvori python object v json in shrani v config.json
 def save():
     config_dict = asdict(this.CONFIG)
     file = this.config_path.open("w")
