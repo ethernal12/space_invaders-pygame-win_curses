@@ -2,6 +2,7 @@ import pygame_menu.widgets.core
 
 from src.app._app import App
 import sys
+import time
 import pygame
 import pygame_menu
 
@@ -93,9 +94,11 @@ class GUI(App):
             self.vesolje.ladja.x = sirina
 
     def _omejitev_pozicije_vesoljcev(self):
-        sirina = 1 - self.vesolje.vesoljci.velikost_x
-        if self.vesolje.vesoljci.x >= sirina:
-            self.vesolje.vesoljci.smer = "levo"
+        sirina = 1 - self.vesolje.stev_vesoljcev[-1].velikost_x
+        if self.vesolje.stev_vesoljcev[-1].x >= sirina:
+            for j in range(len(self.vesolje.stev_vesoljcev)):
+                self.vesolje.stev_vesoljcev[j].smer = "levo"
+                self.vesolje.stev_vesoljcev[j].y += 0.01
 
     def narisi(self):
         if self.menu.is_enabled():
@@ -118,18 +121,19 @@ class GUI(App):
 
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
+            vv_x, vv_y = self._mapiraj(x=self.vesolje.stev_vesoljcev[0].velikost_x,
+                                       y=self.vesolje.stev_vesoljcev[0].velikost_y)
+            vesoljci = pygame.image.load(pot.data("media", "vesoljci.png"))
+            velikost_vesoljcev = pygame.transform.scale(vesoljci, (vv_x, vv_y))
+            # MAPIRANJE IN RISANJE VESOLJCEV
 
             for i in range(len(self.vesolje.stev_vesoljcev)):
-                # MAPIRANJE POZICIJE IN VELIKOSTI VEOSLJCEV
-                vv_x, vv_y = self._mapiraj(x=self.vesolje.stev_vesoljcev[i].velikost_x, y=self.vesolje.stev_vesoljcev[i].velikost_y)
                 ve_x, ve_y = self._mapiraj(x=self.vesolje.stev_vesoljcev[i].x, y=self.vesolje.stev_vesoljcev[i].y)
-                # NARIŠI VESOLJCE
-                vesoljci = pygame.image.load(pot.data("media", "vesoljci.png"))
-                velikost_vesoljcev = pygame.transform.scale(vesoljci, (vv_x, vv_y))
                 self.surface.blit(velikost_vesoljcev, (ve_x, ve_y + vv_y))
-                self.vesolje.menjava_smeri_vesoljcev()
-                self._omejitev_pozicije_vesoljcev()
+
                 self.vesolje.stev_vesoljcev[i].premikanje()
+            self.vesolje.menjava_smeri_vesoljcev()
+            self._omejitev_pozicije_vesoljcev()
 
         pygame.display.update()
 
@@ -191,3 +195,9 @@ class GUI(App):
     def _nastavi_jezik(self, jezik: list):
         S.CONFIG.jezik = jezik[0]
         S.save()
+
+    def konec(self):
+        for i in range(len(self.vesolje.stev_vesoljcev)):
+            if self.vesolje.stev_vesoljcev[i].y >= 0.8:
+                print('konec igre!!!!!!')
+                return True

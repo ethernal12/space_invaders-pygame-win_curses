@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from src.domain.ladja import Ladja
 
@@ -7,27 +7,32 @@ from src.domain.vesoljci import Vesoljci
 
 @dataclass
 class Vesolje:
+    st_vrst = 0
+    st_vesoljcev = 0
+    premik_navzdol = 0
+    stev_vesoljcev: list[Vesoljci] = field(default_factory=list)
     ladja: Ladja = None
     vesoljci: Vesoljci = None
-    stev_vesoljcev = []
 
     def __post_init__(self):
-
+        self.st_vrst = 3
+        self.st_vesoljcev = 8
+        self.premik_navzdol = 0.01
         self.ladja = Ladja(x=0.5,
                            y=1,
                            velikost_x=0.1,
                            velikost_y=0.1,
                            hitrost=0.009
                            )
-        for i in range(1, 5):
-            self.vesoljci = Vesoljci(x=i / 10,
-                                     y=0,
-                                     velikost_x=0.08,
-                                     velikost_y=0.08,
-                                     hitrost=0.01,
-                                     smer="desno"
-                                     )
-            self.stev_vesoljcev.append(self.vesoljci)
+
+        for i in range(self.st_vesoljcev):
+            for j in range(self.st_vrst):
+                self.stev_vesoljcev.append(Vesoljci(x=i / 10,
+                                                    y=j / 12,
+                                                    velikost_x=0.08,
+                                                    velikost_y=0.08,
+                                                    hitrost=0.002,
+                                                    smer="desno"))
 
     def omejitev_ladje(self):
 
@@ -37,11 +42,14 @@ class Vesolje:
             self.ladja.x = 0
 
     def menjava_smeri_vesoljcev(self):
-        for i in range(len(self.stev_vesoljcev)):
-            if self.stev_vesoljcev[i].x >= 1:
-                print('opa!')
-                for j in range(len(self.stev_vesoljcev)):
-                    self.stev_vesoljcev[j].smer = "levo"
-            elif self.stev_vesoljcev[i].x <= 0:
-                for k in range(len(self.stev_vesoljcev)):
-                    self.stev_vesoljcev[k].smer = "desno"
+
+        if self.stev_vesoljcev[-1].x >= 1:
+            for j in range(len(self.stev_vesoljcev)):
+                self.stev_vesoljcev[j].smer = "levo"
+                self.stev_vesoljcev[j].y += self.premik_navzdol
+
+        elif self.stev_vesoljcev[0].x <= 0:
+            for k in range(len(self.stev_vesoljcev)):
+                self.stev_vesoljcev[k].smer = "desno"
+                self.stev_vesoljcev[k].y += self.premik_navzdol
+
