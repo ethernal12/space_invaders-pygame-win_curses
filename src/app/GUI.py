@@ -2,7 +2,6 @@ import pygame_menu.widgets.core
 
 from src.app._app import App
 import sys
-import time
 import pygame
 import pygame_menu
 
@@ -83,7 +82,6 @@ class GUI(App):
 
     def init(self):
         self.vesolje = Vesolje()
-        self._narisi_vesoljce()
 
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         return int(self.sirina * x), int(self.visina * y)
@@ -93,6 +91,8 @@ class GUI(App):
         if self.vesolje.ladja.x >= sirina:
             self.vesolje.ladja.x = sirina
 
+    # TODO: PROBLEM PRI POPRAVLJANJU VREDNOSTI PREMIKANJA NAVZDOL,
+    #  POPRAVITI TUKAJ IN ŠE V CLASSU VESOLJE
     def _omejitev_pozicije_vesoljcev(self):
         sirina = 1 - self.vesolje.stev_vesoljcev[-1].velikost_x
         if self.vesolje.stev_vesoljcev[-1].x >= sirina:
@@ -121,8 +121,10 @@ class GUI(App):
 
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
-            vv_x, vv_y = self._mapiraj(x=self.vesolje.stev_vesoljcev[0].velikost_x,
-                                       y=self.vesolje.stev_vesoljcev[0].velikost_y)
+            # TODO: DODAL VELIKOST_X IN VELIKOST_Y V VESOLJE CLASS ZARADI MAPIRANJA IN DA IMAM REFERENCO O
+            #  VELIKOSTI  VESOLJCA TUDI PO TEM KO SO VSI ODSTRANJENI
+            vv_x, vv_y = self._mapiraj(x=self.vesolje.velikost_x,
+                                       y=self.vesolje.velikost_y)
             vesoljci = pygame.image.load(pot.data("media", "vesoljci.png"))
             velikost_vesoljcev = pygame.transform.scale(vesoljci, (vv_x, vv_y))
             # MAPIRANJE IN RISANJE VESOLJCEV
@@ -149,6 +151,10 @@ class GUI(App):
                     sys.exit()
                 elif event.key == pygame.K_SPACE:
                     self.menu.enable()
+                # test odstrani vesoljce -> ENTER
+                elif event.key == pygame.K_RETURN:
+                    for vesoljec in self.vesolje.stev_vesoljcev:
+                        self.vesolje.stev_vesoljcev.remove(vesoljec)
 
         keys = pygame.key.get_pressed()
 
@@ -161,16 +167,8 @@ class GUI(App):
             self.vesolje.omejitev_ladje()
             self._omejitev_pozicije_ladje()
 
-        # PREVERI ČE JE PRITISNJEN KATERI GUMB NA MENIJU
-
         pygame.display.update()
         self.clock.tick(S.APP.nastavitve.clock_tick)
-
-    def _narisi_vesoljce(self):
-        pass
-
-    def konec(self) -> None:
-        pass
 
     def _izrisi_text(self, naslov: str, tekst: str, pozicija_x: int, pozicija_y: int):
         # USTVARI TEXT PODLAGO
@@ -196,8 +194,11 @@ class GUI(App):
         S.CONFIG.jezik = jezik[0]
         S.save()
 
-    def konec(self):
-        for i in range(len(self.vesolje.stev_vesoljcev)):
-            if self.vesolje.stev_vesoljcev[i].y >= 0.8:
-                print('konec igre!!!!!!')
-                return True
+    # TODO: INVADERJI ZAZNAJO KONTAKT LADJE ŠELE NA NJENI SREDINI, NE NA KONICI LADJE :/
+    def konec(self) -> bool:
+        if len(self.vesolje.stev_vesoljcev) != 0:
+            for i in range(len(self.vesolje.stev_vesoljcev)):
+                if self.vesolje.stev_vesoljcev[i].y + self.vesolje.velikost_y >= 1 - self.vesolje.ladja.velikost_y:
+                    return True
+        else:
+            return True

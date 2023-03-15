@@ -7,17 +7,16 @@ from src.domain.vesoljci import Vesoljci
 
 @dataclass
 class Vesolje:
-    st_vrst = 0
-    st_vesoljcev = 0
-    premik_navzdol = 0
+    st_vrst = 2
+    st_vesoljcev = 8
+    premik_navzdol = 0.05
+    velikost_x = 0.08
+    velikost_y = 0.08
     stev_vesoljcev: list[Vesoljci] = field(default_factory=list)
     ladja: Ladja = None
     vesoljci: Vesoljci = None
 
     def __post_init__(self):
-        self.st_vrst = 3
-        self.st_vesoljcev = 8
-        self.premik_navzdol = 0.01
         self.ladja = Ladja(x=0.5,
                            y=1,
                            velikost_x=0.1,
@@ -29,9 +28,9 @@ class Vesolje:
             for j in range(self.st_vrst):
                 self.stev_vesoljcev.append(Vesoljci(x=i / 10,
                                                     y=j / 12,
-                                                    velikost_x=0.08,
-                                                    velikost_y=0.08,
-                                                    hitrost=0.002,
+                                                    velikost_x=self.velikost_x,
+                                                    velikost_y=self.velikost_y,
+                                                    hitrost=0.01,
                                                     smer="desno"))
 
     def omejitev_ladje(self):
@@ -52,4 +51,3 @@ class Vesolje:
             for k in range(len(self.stev_vesoljcev)):
                 self.stev_vesoljcev[k].smer = "desno"
                 self.stev_vesoljcev[k].y += self.premik_navzdol
-

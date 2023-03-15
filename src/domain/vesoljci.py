@@ -7,7 +7,7 @@ from src.domain.objekt import Objekt
 class Vesoljci(Objekt):
     velikost_x: float
     velikost_y: float
-    hitrost :float
+    hitrost: float
     smer: str
 
     def premikanje(self):
