@@ -22,8 +22,7 @@ class GUI(App):
         self.surface = pygame.display.set_mode((self.sirina, self.visina), 0, 32)
 
         # IZBIRA BARVNE TEME ZA MENIJE
-        self.theme = pygame_menu.themes.THEME_BLUE
-
+        self.theme = pygame_menu.themes.THEME_SOLARIZED
         self.menu = pygame_menu.Menu(
             S.JEZIK.aplikacija.naslov,
             self.sirina,
@@ -91,14 +90,14 @@ class GUI(App):
         if self.vesolje.ladja.x >= sirina:
             self.vesolje.ladja.x = sirina
 
-    # TODO: PROBLEM PRI POPRAVLJANJU VREDNOSTI PREMIKANJA NAVZDOL,
-    #  POPRAVITI TUKAJ IN ŠE V CLASSU VESOLJE
     def _omejitev_pozicije_vesoljcev(self):
-        sirina = 1 - self.vesolje.stev_vesoljcev[-1].velikost_x
+        # TODO: TUKAJ SEM ZAMENJAL self.vesolje.stev_vesoljcev[-1].velikost_x Z self.vesolje.velikost_vesoljca_x
+        #  ČE VELJA DA BOJO VSI VESOLJCI ISTE VELIKOSTI :/
+        sirina = 1 - self.vesolje.velikost_vesoljca_x
         if self.vesolje.stev_vesoljcev[-1].x >= sirina:
             for j in range(len(self.vesolje.stev_vesoljcev)):
                 self.vesolje.stev_vesoljcev[j].smer = "levo"
-                self.vesolje.stev_vesoljcev[j].y += 0.01
+                self.vesolje.stev_vesoljcev[j].y += self.vesolje.premik_vesoljca_navzdol
 
     def narisi(self):
         if self.menu.is_enabled():
@@ -122,9 +121,9 @@ class GUI(App):
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
             # TODO: DODAL VELIKOST_X IN VELIKOST_Y V VESOLJE CLASS ZARADI MAPIRANJA IN DA IMAM REFERENCO O
-            #  VELIKOSTI  VESOLJCA TUDI PO TEM KO SO VSI ODSTRANJENI
-            vv_x, vv_y = self._mapiraj(x=self.vesolje.velikost_x,
-                                       y=self.vesolje.velikost_y)
+            #  VELIKOSTI  VESOLJCA TUDI PO TEM KO SO VSI ODSTRANJENI, PREJ SEM VZEL VELIKOST VESOLJCA IZ LISTE VESOLJCEV
+            vv_x, vv_y = self._mapiraj(x=self.vesolje.velikost_vesoljca_x,
+                                       y=self.vesolje.velikost_vesoljca_y)
             vesoljci = pygame.image.load(pot.data("media", "vesoljci.png"))
             velikost_vesoljcev = pygame.transform.scale(vesoljci, (vv_x, vv_y))
             # MAPIRANJE IN RISANJE VESOLJCEV
@@ -151,6 +150,7 @@ class GUI(App):
                     sys.exit()
                 elif event.key == pygame.K_SPACE:
                     self.menu.enable()
+                # TODO: PRED PULL REQUESTOM ODSTRANITI EVENT ! TEST ONLY
                 # test odstrani vesoljce -> ENTER
                 elif event.key == pygame.K_RETURN:
                     for vesoljec in self.vesolje.stev_vesoljcev:
@@ -197,8 +197,9 @@ class GUI(App):
     # TODO: INVADERJI ZAZNAJO KONTAKT LADJE ŠELE NA NJENI SREDINI, NE NA KONICI LADJE :/
     def konec(self) -> bool:
         if len(self.vesolje.stev_vesoljcev) != 0:
-            for i in range(len(self.vesolje.stev_vesoljcev)):
-                if self.vesolje.stev_vesoljcev[i].y + self.vesolje.velikost_y >= 1 - self.vesolje.ladja.velikost_y:
+            for vesoljec in self.vesolje.stev_vesoljcev:
+                print(vesoljec.y + vesoljec.velikost_y, 'velikost')
+                if vesoljec.y + vesoljec.velikost_y > 1 - self.vesolje.ladja.velikost_y:
                     return True
         else:
             return True

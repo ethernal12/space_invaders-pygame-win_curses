@@ -28,3 +28,20 @@ class Test_Vesoljci(unittest.TestCase):
         self.assertEqual(self.vesoljci.hitrost, self.hitrost)
         self.assertEqual(self.vesoljci.smer, self.smer)
 
+    def test_premikanje(self):
+        self.vesoljci.smer = 'desno'
+        x_vesoljca_pred = self.vesoljci.x
+        self.vesoljci.premikanje()
+        x_vesoljca_po = self.vesoljci.x
+        self.assertTrue(x_vesoljca_pred < x_vesoljca_po)
+
+        self.vesoljci.smer = 'levo'
+        x_vesoljca_pred = self.vesoljci.x
+        self.vesoljci.premikanje()
+        x_vesoljca_po = self.vesoljci.x
+        self.assertTrue(x_vesoljca_pred > x_vesoljca_po)
+
+
+
+
+

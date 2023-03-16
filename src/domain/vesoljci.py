@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from src.domain.objekt import Objekt
 
-
+# TODO: TUKAJ BI MOGOČE DODAL INITIALIZACIJO VELIKOSTI VESOLJCA ?
 @dataclass
 class Vesoljci(Objekt):
     velikost_x: float
