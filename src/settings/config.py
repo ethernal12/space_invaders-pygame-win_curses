@@ -78,24 +78,30 @@ class Config:
 class NastavitveConfig:
     clock_tick: int
 
+@dataclass
+class SmerConfig:
+    levo: str
+    desno: str
+
 
 @dataclass
 class App:
     nastavitve: NastavitveConfig
     barve: BarveConfig
     font: FontConfig
+    smer: SmerConfig
 
     def __post_init__(self):
         self.nastavitve = NastavitveConfig(**self.nastavitve)
         self.font = FontConfig(**self.font)
         self.barve = BarveConfig(**self.barve)
+        self.smer = SmerConfig(**self.smer)
 
 
 this = sys.modules[__name__]
 this.CONFIG: Config = None
 this.JEZIK: Jezik = None
 this.APP: App = None
-print(pot.data)
 this.jeziki_dir = pot.data("jeziki")
 this.config_path = pot.data("config.json")
 this.app_path = pot.data(".app.json")

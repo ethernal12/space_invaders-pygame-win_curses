@@ -4,13 +4,16 @@ from src.domain.ladja import Ladja
 
 from src.domain.vesoljci import Vesoljci
 
+#TODO: KER NE SMEM IMETI CONFIGA V DOMENI, SEM MISLIL DA BI TE VREDNOSTI KI SO V INITU,
+# INICIALIZIRAU V GUI, KO USTVARJAM VESOLJE(), IN TAM ČRPAL IZ _APP.JSON?
+
 @dataclass
 class Vesolje:
     st_vrst: int = 2
     st_vesoljcev: int = 8
     razmik_vesoljcev_x: int = 10
     razmik_vesoljcev_y: int = 12
-    premik_vesoljca_navzdol: float = 0.08
+    premik_vesoljca_navzdol: float = 0.02
     velikost_vesoljca_x: float = 0.08
     velikost_vesoljca_y: float = 0.08
     stev_vesoljcev: list[Vesoljci] = field(default_factory=list)
@@ -33,6 +36,7 @@ class Vesolje:
                                                     velikost_y=self.velikost_vesoljca_y,
                                                     hitrost=0.01,
                                                     smer="desno"))
+
     def omejitev_ladje(self):
 
         if self.ladja.x >= 1:

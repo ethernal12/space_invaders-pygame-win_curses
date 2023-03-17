@@ -61,8 +61,3 @@ class Test_Vesolje(unittest.TestCase):
         self.vesolje.menjava_smeri_vesoljcev()
         for i in range(len(self.vesolje.stev_vesoljcev)):
             self.assertEqual(self.vesolje.stev_vesoljcev[i].smer, 'desno')
-
-
-
-
-

@@ -85,18 +85,20 @@ class GUI(App):
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         return int(self.sirina * x), int(self.visina * y)
 
+    # DODANO ZARADI ŠIRINE SLIKE
     def _omejitev_pozicije_ladje(self):
         sirina = 1 - self.vesolje.ladja.velikost_x
         if self.vesolje.ladja.x >= sirina:
             self.vesolje.ladja.x = sirina
 
+    # DODANO ZARADI ŠIRINE SLIKE
     def _omejitev_pozicije_vesoljcev(self):
         # TODO: TUKAJ SEM ZAMENJAL self.vesolje.stev_vesoljcev[-1].velikost_x Z self.vesolje.velikost_vesoljca_x
         #  ČE VELJA DA BOJO VSI VESOLJCI ISTE VELIKOSTI :/
         sirina = 1 - self.vesolje.velikost_vesoljca_x
         if self.vesolje.stev_vesoljcev[-1].x >= sirina:
             for j in range(len(self.vesolje.stev_vesoljcev)):
-                self.vesolje.stev_vesoljcev[j].smer = "levo"
+                self.vesolje.stev_vesoljcev[j].smer = S.APP.smer.levo
                 self.vesolje.stev_vesoljcev[j].y += self.vesolje.premik_vesoljca_navzdol
 
     def narisi(self):
@@ -150,7 +152,7 @@ class GUI(App):
                     sys.exit()
                 elif event.key == pygame.K_SPACE:
                     self.menu.enable()
-                # TODO: PRED PULL REQUESTOM ODSTRANITI EVENT ! TEST ONLY
+                # TODO: PRED MERGANJEM V MASTER ODSTRANITI EVENT ! TEST ONLY
                 # test odstrani vesoljce -> ENTER
                 elif event.key == pygame.K_RETURN:
                     for vesoljec in self.vesolje.stev_vesoljcev:
@@ -198,7 +200,6 @@ class GUI(App):
     def konec(self) -> bool:
         if len(self.vesolje.stev_vesoljcev) != 0:
             for vesoljec in self.vesolje.stev_vesoljcev:
-                print(vesoljec.y + vesoljec.velikost_y, 'velikost')
                 if vesoljec.y + vesoljec.velikost_y > 1 - self.vesolje.ladja.velikost_y:
                     return True
         else:
