@@ -47,11 +47,11 @@ class GUI(App):
         self.vnesi_ime_label = None
 
         self.vesolje = None
-        self.vesoljci = None
 
         self._init_meni()
         self._init_config_meni()
         self.menu.enable()
+        self.key_enabled = True
 
     def _init_meni(self):
         # INICIALIZACIJA GLAVNEGA MENIJA
@@ -85,21 +85,22 @@ class GUI(App):
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         return int(self.sirina * x), int(self.visina * y)
 
-    # DODANO ZARADI ŠIRINE SLIKE
+    # TODO: da te dve funkciji implementiraš na način da ne
+    #  boš spreminjal nobene stvari iz domenskega prostora.
     def _omejitev_pozicije_ladje(self):
         sirina = 1 - self.vesolje.ladja.velikost_x
         if self.vesolje.ladja.x >= sirina:
-            self.vesolje.ladja.x = sirina
+            self.key_enabled = False
+        else:
+            self.key_enabled = True
 
-    # DODANO ZARADI ŠIRINE SLIKE
+    # TODO: TO FUNKCIJO MI NI USPELO MODIFICIRAT
     def _omejitev_pozicije_vesoljcev(self):
-        # TODO: TUKAJ SEM ZAMENJAL self.vesolje.stev_vesoljcev[-1].velikost_x Z self.vesolje.velikost_vesoljca_x
-        #  ČE VELJA DA BOJO VSI VESOLJCI ISTE VELIKOSTI :/
         sirina = 1 - self.vesolje.velikost_vesoljca_x
-        if self.vesolje.stev_vesoljcev[-1].x >= sirina:
-            for j in range(len(self.vesolje.stev_vesoljcev)):
-                self.vesolje.stev_vesoljcev[j].smer = S.APP.smer.levo
-                self.vesolje.stev_vesoljcev[j].y += self.vesolje.premik_vesoljca_navzdol
+        if self.vesolje.vesoljci[-1].x >= sirina:
+            for j in range(len(self.vesolje.vesoljci)):
+                self.vesolje.vesoljci[j].y += self.vesolje.premik_vesoljca_navzdol
+                self.vesolje.vesoljci[j].hitrost *= -1
 
     def narisi(self):
         if self.menu.is_enabled():
@@ -114,29 +115,26 @@ class GUI(App):
             # ZAPOLNI DISPLAY Z BARVO, ČRNA
             self.surface.fill(S.APP.barve.bela)
             # SPREMENI VELIKOST
-            ladja = pygame.image.load(pot.data("media", "ladja.png"))
+            ladja = pygame.image.load(pot.media(S.APP.slike.ladja))
 
             velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
-            # PREMIKANJE VESOLJCEV
-
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
-            # TODO: DODAL VELIKOST_X IN VELIKOST_Y V VESOLJE CLASS ZARADI MAPIRANJA IN DA IMAM REFERENCO O
-            #  VELIKOSTI  VESOLJCA TUDI PO TEM KO SO VSI ODSTRANJENI, PREJ SEM VZEL VELIKOST VESOLJCA IZ LISTE VESOLJCEV
+
             vv_x, vv_y = self._mapiraj(x=self.vesolje.velikost_vesoljca_x,
                                        y=self.vesolje.velikost_vesoljca_y)
-            vesoljci = pygame.image.load(pot.data("media", "vesoljci.png"))
-            velikost_vesoljcev = pygame.transform.scale(vesoljci, (vv_x, vv_y))
+
+            vesoljci_slika = pygame.image.load(pot.media(S.APP.slike.vesoljci))
+            velikost_vesoljcev = pygame.transform.scale(vesoljci_slika, (vv_x, vv_y))
             # MAPIRANJE IN RISANJE VESOLJCEV
 
-            for i in range(len(self.vesolje.stev_vesoljcev)):
-                ve_x, ve_y = self._mapiraj(x=self.vesolje.stev_vesoljcev[i].x, y=self.vesolje.stev_vesoljcev[i].y)
+            for i in range(len(self.vesolje.vesoljci)):
+                ve_x, ve_y = self._mapiraj(x=self.vesolje.vesoljci[i].x, y=self.vesolje.vesoljci[i].y)
                 self.surface.blit(velikost_vesoljcev, (ve_x, ve_y + vv_y))
-
-                self.vesolje.stev_vesoljcev[i].premikanje()
+                self.vesolje.vesoljci[i].premikanje()
             self.vesolje.menjava_smeri_vesoljcev()
-            self._omejitev_pozicije_vesoljcev()
+            # self._omejitev_pozicije_vesoljcev()
 
         pygame.display.update()
 
@@ -155,16 +153,16 @@ class GUI(App):
                 # TODO: PRED MERGANJEM V MASTER ODSTRANITI EVENT ! TEST ONLY
                 # test odstrani vesoljce -> ENTER
                 elif event.key == pygame.K_RETURN:
-                    for vesoljec in self.vesolje.stev_vesoljcev:
-                        self.vesolje.stev_vesoljcev.remove(vesoljec)
+                    for vesoljec in self.vesolje.vesoljci:
+                        self.vesolje.vesoljci.remove(vesoljec)
 
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_a]:
             self.vesolje.ladja.levo()
             self.vesolje.omejitev_ladje()
+            self._omejitev_pozicije_ladje()
 
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_d] and self.key_enabled:
             self.vesolje.ladja.desno()
             self.vesolje.omejitev_ladje()
             self._omejitev_pozicije_ladje()
@@ -196,11 +194,14 @@ class GUI(App):
         S.CONFIG.jezik = jezik[0]
         S.save()
 
-    # TODO: INVADERJI ZAZNAJO KONTAKT LADJE ŠELE NA NJENI SREDINI, NE NA KONICI LADJE :/
     def konec(self) -> bool:
-        if len(self.vesolje.stev_vesoljcev) != 0:
-            for vesoljec in self.vesolje.stev_vesoljcev:
-                if vesoljec.y + vesoljec.velikost_y > 1 - self.vesolje.ladja.velikost_y:
+        if len(self.vesolje.vesoljci) != 0:
+            for vesoljec in self.vesolje.vesoljci:
+                ve_x, ve_y = self._mapiraj(x=vesoljec.x, y=vesoljec.y)
+                vv_x, vv_y = self._mapiraj(x=self.vesolje.velikost_vesoljca_x,
+                                           y=self.vesolje.velikost_vesoljca_y)
+
+                if ve_y + vv_y >= self.visina:
                     return True
         else:
             return True

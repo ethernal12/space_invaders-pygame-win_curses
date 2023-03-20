@@ -5,18 +5,16 @@ from src.domain.vesoljci import Vesoljci
 
 class Test_Vesoljci(unittest.TestCase):
     def setUp(self) -> None:
-        self.x = 10
-        self.y = 12
+        self.x = 0.1
+        self.y = 0.1
         self.velikost_x = 0.08
         self.velikost_y = 0.08
         self.hitrost = 0.02
-        self.smer = 'desno'
         self.vesoljci = Vesoljci(x=self.x,
                                  y=self.y,
                                  velikost_x=self.velikost_x,
                                  velikost_y=self.velikost_y,
                                  hitrost=self.hitrost,
-                                 smer=self.smer
 
                                  )
 
@@ -26,22 +24,18 @@ class Test_Vesoljci(unittest.TestCase):
         self.assertEqual(self.vesoljci.velikost_x, self.velikost_x)
         self.assertEqual(self.vesoljci.velikost_y, self.velikost_y)
         self.assertEqual(self.vesoljci.hitrost, self.hitrost)
-        self.assertEqual(self.vesoljci.smer, self.smer)
 
     def test_premikanje(self):
-        self.vesoljci.smer = 'desno'
+        # premikanje levo
+        self.vesoljci.x = 0.5
         x_vesoljca_pred = self.vesoljci.x
         self.vesoljci.premikanje()
         x_vesoljca_po = self.vesoljci.x
         self.assertTrue(x_vesoljca_pred < x_vesoljca_po)
 
-        self.vesoljci.smer = 'levo'
+        # premikanje desno
         x_vesoljca_pred = self.vesoljci.x
+        self.vesoljci.x = 0
         self.vesoljci.premikanje()
         x_vesoljca_po = self.vesoljci.x
         self.assertTrue(x_vesoljca_pred > x_vesoljca_po)
-
-
-
-
-

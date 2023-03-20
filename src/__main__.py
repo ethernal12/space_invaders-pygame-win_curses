@@ -14,5 +14,4 @@ app.init()
 while not app.konec():
     app.narisi()
     app.vnos()
-    app.konec()
 S.save()
