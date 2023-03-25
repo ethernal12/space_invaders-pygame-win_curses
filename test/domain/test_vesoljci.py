@@ -1,6 +1,6 @@
 import unittest
 
-from src.domain.vesoljci import Vesoljci
+from src.domain.vesoljec import Vesoljec
 
 
 class Test_Vesoljci(unittest.TestCase):
@@ -10,7 +10,7 @@ class Test_Vesoljci(unittest.TestCase):
         self.velikost_x = 0.08
         self.velikost_y = 0.08
         self.hitrost = 0.02
-        self.vesoljci = Vesoljci(x=self.x,
+        self.vesoljci = Vesoljec(x=self.x,
                                  y=self.y,
                                  velikost_x=self.velikost_x,
                                  velikost_y=self.velikost_y,

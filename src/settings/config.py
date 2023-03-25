@@ -79,10 +79,6 @@ class NastavitveConfig:
     clock_tick: int
 
 
-@dataclass
-class SmerConfig:
-    levo: str
-    desno: str
 
 @dataclass
 class SlikeConfig:
@@ -95,14 +91,12 @@ class App:
     nastavitve: NastavitveConfig
     barve: BarveConfig
     font: FontConfig
-    smer: SmerConfig
     slike: SlikeConfig
 
     def __post_init__(self):
         self.nastavitve = NastavitveConfig(**self.nastavitve)
         self.font = FontConfig(**self.font)
         self.barve = BarveConfig(**self.barve)
-        self.smer = SmerConfig(**self.smer)
         self.slike = SlikeConfig(**self.slike)
 
 this = sys.modules[__name__]
@@ -133,5 +127,5 @@ def init():
 def save():
     config_dict = asdict(this.CONFIG)
     file = this.config_path.open("w")
-    file_txt = json.dumps(config_dict)
+    file_txt = json.dumps(config_dict, indent=2)
     file.write(file_txt)
