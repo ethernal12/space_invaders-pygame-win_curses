@@ -1,13 +1,9 @@
-import pygame_menu.widgets.core
-
 from src.app._app import App
 import sys
 import pygame
-import pygame_menu
 
 from src.app.gui_config import GuiConfig
 from src.domain.objekt import Objekt
-from src.domain.vector2D import Vector2D
 from src.domain.vesolje import Vesolje
 from src.utils import pot
 from src.settings import config as S
@@ -50,11 +46,12 @@ class Gui(App, GuiConfig):
             for vesolc in self.vesolje.bataljon.vesoljci:
                 v_x, v_y, vv_x, vv_y = self._mapiraj_obj(o=vesolc)
                 velikost_vesoljcev = pygame.transform.scale(vesoljci_slika, (vv_x, vv_y))
-                self.surface.blit(velikost_vesoljcev, (v_x, v_y))
+                self.surface.blit(velikost_vesoljcev, (v_x, v_y + vv_y / 2))
         pygame.display.update()
 
     def pocakaj(self):
-        self.vesolje.spremeni()
+        if not self.menu.is_enabled():
+            self.vesolje.spremeni()
 
     def vnos(self):
         events = pygame.event.get()

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from src.domain.objekt import Objekt
-from src.domain.vector2D import Vector2D
 
 
 @dataclass

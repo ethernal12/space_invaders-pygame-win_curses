@@ -1,10 +1,7 @@
 import pygame_menu.widgets.core
 
-from src.app._app import App
-
 import pygame
 import pygame_menu
-
 
 from src.settings import config as S
 
@@ -45,11 +42,9 @@ class GuiConfig():
 
         self.vnesi_ime_label = None
 
-
         self._init_meni()
         self._init_config_meni()
         self.menu.enable()
-
 
     def _init_meni(self):
         # INICIALIZACIJA GLAVNEGA MENIJA
@@ -85,6 +80,7 @@ class GuiConfig():
 
     def _zazeni_igro(self):
         self.menu.disable()
+
 
     def _nastavi_ime(self, ime: str):
         S.CONFIG.igralec.ime = ime

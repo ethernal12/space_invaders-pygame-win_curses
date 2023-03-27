@@ -12,7 +12,7 @@ class Bataljon:
     premik_vesoljca_navzdol: float = 0.1
 
     def __post_init__(self):
-        for y in range(0, 2):
+        for y in range(2):
             for x in range(1, self.velikost + 1):
                 vesoljec = Vesoljec(
                     x=x * self.razmik_vesoljcev.x,
@@ -27,9 +27,12 @@ class Bataljon:
 
         menjaj_stran = False
         for vesoljec in self.vesoljci:
+
             if vesoljec.x >= 1 - vesoljec.sirina / 2:
+
                 menjaj_stran = True
             elif vesoljec.x <= 0 + vesoljec.sirina / 2:
+
                 menjaj_stran = True
         if menjaj_stran:
             for j in range(len(self.vesoljci)):
@@ -38,8 +41,9 @@ class Bataljon:
 
     def najnizji(self) -> Vesoljec:
         najnizji_vesoljec = self.vesoljci[0]
+
         for vesoljec in self.vesoljci:
-            if vesoljec.y < najnizji_vesoljec.y:
-                najnizji_vesoljec = vesoljec.y
+            if vesoljec.y > najnizji_vesoljec.y:
+                najnizji_vesoljec = vesoljec
 
         return najnizji_vesoljec

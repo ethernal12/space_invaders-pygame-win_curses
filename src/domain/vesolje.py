@@ -17,12 +17,12 @@ class Vesolje:
         self.bataljon.premik()
 
         if self.ladja.x + self.ladja.sirina / 2 > 1:
-            self.ladja.x = 1 - self.ladja.sirina
+            self.ladja.x = 1 - self.ladja.sirina / 2
         elif self.ladja.x - self.ladja.sirina / 2 <= 0:
-            self.ladja.x = 0 + self.ladja.sirina
+            self.ladja.x = 0 + self.ladja.sirina / 2
 
     def konec(self) -> bool:
         najnizji = self.bataljon.najnizji()
-        return najnizji.y > 1
+        return najnizji.y + najnizji.visina > 1
 
 

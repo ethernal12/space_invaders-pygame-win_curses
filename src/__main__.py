@@ -11,7 +11,7 @@ S.init()
 app = Gui()
 app.init()
 
-while True:
+while not app.konec():
     app.narisi()
     app.vnos()
     app.pocakaj()

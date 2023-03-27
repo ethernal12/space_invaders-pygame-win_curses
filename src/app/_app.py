@@ -19,9 +19,5 @@ class App(ABC):
         pass
 
     @abstractmethod
-    def pocakaj(self):
-        pass
-
-    @abstractmethod
     def _mapiraj(self, x: float, y: float) -> tuple[int]:
         pass
