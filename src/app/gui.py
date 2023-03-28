@@ -29,20 +29,22 @@ class Gui(App, GuiConfig):
             self.menu.draw(self.surface)
 
         else:
-            # MAPIRANJE POZICIJE IN VELIKOSTI LADJE
-            l_x, l_y, vl_x, vl_y = self._mapiraj_obj(o=self.vesolje.ladja)
             # ZAPOLNI DISPLAY Z BARVO, ČRNA
             self.surface.fill(S.APP.barve.bela)
-            # SPREMENI VELIKOSTq
+
+            # MAPIRANJE POZICIJE IN VELIKOSTI LADJE
+            l_x, l_y, vl_x, vl_y = self._mapiraj_obj(o=self.vesolje.ladja)
+
+            # SPREMENI VELIKOST LADJE
             ladja = pygame.image.load(pot.media(S.APP.slike.ladja))
 
             velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
 
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (l_x, l_y))
-            vesoljci_slika = pygame.image.load(pot.media(S.APP.slike.vesoljci))
 
             # MAPIRANJE IN RISANJE VESOLJCEV
+            vesoljci_slika = pygame.image.load(pot.media(S.APP.slike.vesoljci))
             for vesolc in self.vesolje.bataljon.vesoljci:
                 v_x, v_y, vv_x, vv_y = self._mapiraj_obj(o=vesolc)
                 velikost_vesoljcev = pygame.transform.scale(vesoljci_slika, (vv_x, vv_y))

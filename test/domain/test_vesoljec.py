@@ -6,9 +6,9 @@ from src.domain.vesoljec import Vesoljec
 class Test_Vesoljci(unittest.TestCase):
     def setUp(self) -> None:
         self.x = 0.1
-        self.y = 0.1
+        self.y = 0.2
         self.sirina = 0.08
-        self.visina = 0.08
+        self.visina = 0.09
         self.hitrost = 0.02
         self.vesoljci = Vesoljec(x=self.x,
                                  y=self.y,
@@ -25,7 +25,7 @@ class Test_Vesoljci(unittest.TestCase):
         self.assertEqual(self.vesoljci.visina, self.visina)
         self.assertEqual(self.vesoljci.hitrost, self.hitrost)
 
-    def test_premike(self):
+    def test_premikanje(self):
         # premikanje levo
         self.vesoljci.x = 0.5
         x_vesoljca_pred = self.vesoljci.x
