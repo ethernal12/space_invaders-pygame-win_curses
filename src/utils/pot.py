@@ -7,3 +7,7 @@ def root(*path):
 
 def data(*path):
     return root("data", *path)
+
+
+def media(*path):
+    return root("data/media", *path)

@@ -1,12 +1,12 @@
 {
-  "jezik": "english",
+  "jezik": "slovenski",
   "igralec": {
     "ime": "Danijel"
   },
   "pygame": {
     "dimenzija": {
-      "sirina": 600,
-      "visina": 600
+      "sirina": 700,
+      "visina": 700
     },
     "dimenzije": [
       {

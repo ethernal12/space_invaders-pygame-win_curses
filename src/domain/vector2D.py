@@ -2,5 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class App:
-    pass
+class Vector2D:
+    x: float
+    y: float

@@ -1,26 +1,28 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from src.domain.bataljon import Bataljon
 from src.domain.ladja import Ladja
-
-from src.domain.vesoljci import Vesoljci
 
 
 @dataclass
 class Vesolje:
     ladja: Ladja = None
-    vesoljci: Vesoljci = None
+    bataljon: Bataljon = None
 
     def __post_init__(self):
-        self.ladja = Ladja(x=0.5,
-                           y=1,
-                           velikost_x=0.1,
-                           velikost_y=0.1,
-                           hitrost=0.009
-                           )
+        self.ladja = Ladja(x=0.5, y=0.95, sirina=0.1, visina=0.1)
+        self.bataljon = Bataljon(velikost=8)
 
-    def omejitev_ladje(self):
+    def spremeni(self):
+        self.bataljon.premik()
 
-        if self.ladja.x >= 1:
-            self.ladja.x = 1
-        elif self.ladja.x <= 0:
-            self.ladja.x = 0
+        if self.ladja.x + self.ladja.sirina / 2 > 1:
+            self.ladja.x = 1 - self.ladja.sirina / 2
+        elif self.ladja.x - self.ladja.sirina / 2 <= 0:
+            self.ladja.x = 0 + self.ladja.sirina / 2
+
+    def konec(self) -> bool:
+        najnizji = self.bataljon.najnizji()
+        return najnizji.y + najnizji.visina > 1
+
+

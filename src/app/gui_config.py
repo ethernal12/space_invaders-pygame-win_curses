@@ -1,16 +1,12 @@
 import pygame_menu.widgets.core
 
-from src.app._app import App
-import sys
 import pygame
 import pygame_menu
 
-from src.domain.vesolje import Vesolje
-from src.utils import pot
 from src.settings import config as S
 
 
-class GUI(App):
+class GuiConfig():
 
     def __init__(self):
         self.sirina = S.CONFIG.pygame.dimenzija.sirina
@@ -22,8 +18,7 @@ class GUI(App):
         self.surface = pygame.display.set_mode((self.sirina, self.visina), 0, 32)
 
         # IZBIRA BARVNE TEME ZA MENIJE
-        self.theme = pygame_menu.themes.THEME_BLUE
-
+        self.theme = pygame_menu.themes.THEME_SOLARIZED
         self.menu = pygame_menu.Menu(
             S.JEZIK.aplikacija.naslov,
             self.sirina,
@@ -46,8 +41,6 @@ class GUI(App):
         self.clock = pygame.time.Clock()
 
         self.vnesi_ime_label = None
-
-        self.vesolje = None
 
         self._init_meni()
         self._init_config_meni()
@@ -79,68 +72,6 @@ class GUI(App):
                                         onchange=lambda _, tip: self._nastavi_jezik(tip))
         self.config_menu.add.button(S.JEZIK.nazaj, pygame_menu.events.BACK)
 
-    def init(self):
-        self.vesolje = Vesolje()
-
-    def _mapiraj(self, x: float, y: float) -> tuple[int]:
-        return int(self.sirina * x), int(self.visina * y)
-
-    def _omejitev_pozicije(self):
-        sirina = 1 - self.vesolje.ladja.velikost_x
-        if self.vesolje.ladja.x >= sirina:
-            self.vesolje.ladja.x = sirina
-
-    def narisi(self):
-        if self.menu.is_enabled():
-            self.menu.draw(self.surface)
-
-        else:
-            vl_x, vl_y = self._mapiraj(x=self.vesolje.ladja.velikost_x, y=self.vesolje.ladja.velikost_y)
-            v_x, v_y = self._mapiraj(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y)
-            pygame.display.set_caption(S.JEZIK.aplikacija.naslov)
-            # ZAPOLNI DISPLAY Z BARVO, ČRNA
-            self.surface.fill(S.APP.barve.crna)
-            # SPREMENI VELIKOST
-            ladja = pygame.image.load(pot.data("media", "ladja.png"))
-
-            velikost_ladje = pygame.transform.scale(ladja, (vl_x, vl_y))
-
-            # NARIŠI LADJO
-            self.surface.blit(velikost_ladje, (v_x, v_y - vl_y))
-        pygame.display.update()
-
-    def vnos(self):
-        events = pygame.event.get()
-        if self.menu.is_enabled():
-            self.menu.update(events)
-            return
-        # SPREMLJAJ INPUTE V IGRI
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    sys.exit()
-                elif event.key == pygame.K_SPACE:
-                    self.menu.enable()
-
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_a]:
-            self.vesolje.ladja.levo()
-            self.vesolje.omejitev_ladje()
-
-        elif keys[pygame.K_d]:
-            self.vesolje.ladja.desno()
-            self.vesolje.omejitev_ladje()
-            self._omejitev_pozicije()
-
-        # PREVERI ČE JE PRITISNJEN KATERI GUMB NA MENIJU
-
-        pygame.display.update()
-        self.clock.tick(S.APP.nastavitve.clock_tick)
-
-    def konec(self) -> None:
-        pass
-
     def _izrisi_text(self, naslov: str, tekst: str, pozicija_x: int, pozicija_y: int):
         # USTVARI TEXT PODLAGO
         text_podlaga = self.font.render(f'{naslov} {tekst}', True, S.APP.barve.bela)
@@ -149,6 +80,7 @@ class GUI(App):
 
     def _zazeni_igro(self):
         self.menu.disable()
+
 
     def _nastavi_ime(self, ime: str):
         S.CONFIG.igralec.ime = ime

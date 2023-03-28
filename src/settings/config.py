@@ -79,26 +79,34 @@ class NastavitveConfig:
     clock_tick: int
 
 
+
+@dataclass
+class SlikeConfig:
+    ladja: str
+    vesoljci: str
+
+
 @dataclass
 class App:
     nastavitve: NastavitveConfig
     barve: BarveConfig
     font: FontConfig
+    slike: SlikeConfig
 
     def __post_init__(self):
         self.nastavitve = NastavitveConfig(**self.nastavitve)
         self.font = FontConfig(**self.font)
         self.barve = BarveConfig(**self.barve)
-
+        self.slike = SlikeConfig(**self.slike)
 
 this = sys.modules[__name__]
 this.CONFIG: Config = None
 this.JEZIK: Jezik = None
 this.APP: App = None
-print(pot.data)
 this.jeziki_dir = pot.data("jeziki")
 this.config_path = pot.data("config.json")
 this.app_path = pot.data(".app.json")
+
 
 def init():
     file = this.config_path.open("r")
@@ -114,10 +122,10 @@ def init():
     jezik_txt = jezik_file.read()
     jezik_dict = json.loads(jezik_txt)
     this.JEZIK = Jezik(**jezik_dict)
-print(pot.data())
+
 
 def save():
     config_dict = asdict(this.CONFIG)
     file = this.config_path.open("w")
-    file_txt = json.dumps(config_dict)
+    file_txt = json.dumps(config_dict, indent=2)
     file.write(file_txt)

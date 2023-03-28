@@ -22,6 +22,10 @@
   "font": {
     "velikost": 30,
     "tip": "freesansbold.ttf"
+  },
+  "slike": {
+    "ladja": "ladja.png",
+    "vesoljci": "vesoljci.png"
   }
 }
 
