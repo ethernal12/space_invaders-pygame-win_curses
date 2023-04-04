@@ -5,5 +5,7 @@ from src.domain.objekt import Objekt
 
 @dataclass
 class Strel(Objekt):
-    #streljanje ladje
-    pass
+    hitrost: float
+
+    def premik(self):
+        self.y -= self.hitrost

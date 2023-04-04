@@ -84,6 +84,8 @@ class NastavitveConfig:
 class SlikeConfig:
     ladja: str
     vesoljci: str
+    strel_vesoljec: str
+    strel_ladja: str
 
 
 @dataclass

@@ -4,6 +4,7 @@ import pygame
 
 from src.app.gui_config import GuiConfig
 from src.domain.objekt import Objekt
+from src.domain.strel import Strel
 from src.domain.vesolje import Vesolje
 from src.utils import pot
 from src.settings import config as S
@@ -14,6 +15,7 @@ class Gui(App, GuiConfig):
     def __init__(self):
         super(Gui, self).__init__()
         self.vesolje = None
+        self.flag = False
 
     def init(self):
         self.vesolje = Vesolje()
@@ -42,6 +44,15 @@ class Gui(App, GuiConfig):
 
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (l_x, l_y))
+            for strel in self.vesolje.streli:
+                s_x, s_y, sv_x, sv_y = self._mapiraj_obj(o=strel)
+
+                strel_ladja = pygame.image.load(pot.media(S.APP.slike.strel_ladja))
+
+                self.surface.blit(strel_ladja, (s_x + sv_x // 2, s_y - sv_y // 2))
+                strel.premik()
+                if strel.y < 0:
+                    self.vesolje.streli.remove(strel)
 
             # MAPIRANJE IN RISANJE VESOLJCEV
             vesoljci_slika = pygame.image.load(pot.media(S.APP.slike.vesoljci))
@@ -52,6 +63,7 @@ class Gui(App, GuiConfig):
         pygame.display.update()
 
     def pocakaj(self):
+        self.vesolje.kontakt_vesoljc()
         if not self.menu.is_enabled():
             self.vesolje.spremeni()
 
@@ -67,6 +79,10 @@ class Gui(App, GuiConfig):
                     sys.exit()
                 elif event.key == pygame.K_SPACE:
                     self.menu.enable()
+                elif event.key == pygame.K_f:
+                    novi_strel = Strel(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y, sirina=0.1, visina=0.1,
+                                       hitrost=0.02)
+                    self.vesolje.streli.append(novi_strel)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
@@ -74,7 +90,6 @@ class Gui(App, GuiConfig):
 
         elif keys[pygame.K_d]:
             self.vesolje.ladja.desno()
-
         pygame.display.update()
         self.clock.tick(S.APP.nastavitve.clock_tick)
 

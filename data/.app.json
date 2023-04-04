@@ -25,7 +25,9 @@
   },
   "slike": {
     "ladja": "ladja.png",
-    "vesoljci": "vesoljci.png"
+    "vesoljci": "vesoljci.png",
+    "strel_vesoljec": "strel_vesoljec.png",
+    "strel_ladja": "strel_ladja.png"
   }
 }
 
