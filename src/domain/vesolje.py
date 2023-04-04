@@ -43,21 +43,6 @@ class Vesolje:
             return True
         else:
             return False
-        # for i in range(len(self.streli)):
-        #     for vesoljc in self.bataljon.vesoljci:
-        #         vx = vesoljc.x
-        #         vy = vesoljc.y
-        #         sx = self.streli[i].x
-        #         sy = self.streli[i].y
-        #         rvx = round(vx, 5)
-        #         rvy = round(vy, 2)
-        #         rsx = round(sx, 5)
-        #         rsy = round(sy, 2)
-        #         print(rsy, rvy, 'strely', 'vesoljcy')
-        #         # print(rsx, rsy, 'strel')
-        #         if rvy == rsy and rvx == rsx:
-        #             print('hit')
-        #             self.bataljon.vesoljci.remove(vesoljc)
 
     def konec(self) -> bool:
         if self.bataljon.vesoljci:
