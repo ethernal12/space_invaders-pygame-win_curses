@@ -7,5 +7,8 @@ from src.domain.objekt import Objekt
 class Strel(Objekt):
     hitrost: float
 
-    def premik(self):
+    def premik_navzgor(self):
         self.y -= self.hitrost
+
+    def premakni_navzdol(self):
+        self.y += self.hitrost

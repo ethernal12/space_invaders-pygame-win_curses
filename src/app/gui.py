@@ -1,3 +1,5 @@
+import random
+
 from src.app._app import App
 import sys
 import pygame
@@ -16,6 +18,7 @@ class Gui(App, GuiConfig):
         super(Gui, self).__init__()
         self.vesolje = None
         self.flag = False
+        self.shot_timer = 0
 
     def init(self):
         self.vesolje = Vesolje()
@@ -44,16 +47,31 @@ class Gui(App, GuiConfig):
 
             # NARIŠI LADJO
             self.surface.blit(velikost_ladje, (l_x, l_y))
-            for strel in self.vesolje.streli:
+            # TODO: PREMAKNI LOGIKO V VESOLJE ??
+            for strel in self.vesolje.streli_ladja:
                 s_x, s_y, sv_x, sv_y = self._mapiraj_obj(o=strel)
 
                 strel_ladja = pygame.image.load(pot.media(S.APP.slike.strel_ladja))
 
                 self.surface.blit(strel_ladja, (s_x + sv_x // 2, s_y - sv_y // 2))
-                strel.premik()
+                strel.premik_navzgor()
                 if strel.y < 0:
-                    self.vesolje.streli.remove(strel)
+                    self.vesolje.streli_ladja.remove(strel)
+            # STREL VESOLJCI
+            for strel in self.vesolje.streli_vesoljci:
+                strel_vesoljci = pygame.image.load(pot.media(S.APP.slike.strel_vesoljec))
+                s_x, s_y = self._mapiraj(x=strel.x, y=strel.y)
+                self.surface.blit(strel_vesoljci, (s_x, s_y))
+                strel.premakni_navzdol()
+            self.shot_timer += 1
 
+            if self.shot_timer >= 100:
+                self.shot_timer = 0
+                ran = random.randint(0, 8)
+                nov_strel = Strel(x=self.vesolje.bataljon.vesoljci[ran].x, y=self.vesolje.bataljon.vesoljci[ran].y,
+                                  sirina=0.1, visina=0.1,
+                                  hitrost=0.01)
+                self.vesolje.streli_vesoljci.append(nov_strel)
             # MAPIRANJE IN RISANJE VESOLJCEV
             vesoljci_slika = pygame.image.load(pot.media(S.APP.slike.vesoljci))
             for vesolc in self.vesolje.bataljon.vesoljci:
@@ -82,7 +100,7 @@ class Gui(App, GuiConfig):
                 elif event.key == pygame.K_f:
                     novi_strel = Strel(x=self.vesolje.ladja.x, y=self.vesolje.ladja.y, sirina=0.1, visina=0.1,
                                        hitrost=0.02)
-                    self.vesolje.streli.append(novi_strel)
+                    self.vesolje.streli_ladja.append(novi_strel)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
