@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # adding directory to python path!
 sys.path.append(os.getcwd())
@@ -12,7 +12,7 @@ app = Gui()
 app.init()
 
 while not app.konec():
-    app.narisi()
-    app.vnos()
-    app.pocakaj()
+	app.narisi()
+	app.vnos()
+	app.pocakaj()
 S.save()

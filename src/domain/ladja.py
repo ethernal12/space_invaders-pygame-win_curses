@@ -5,10 +5,10 @@ from src.domain.objekt import Objekt
 
 @dataclass
 class Ladja(Objekt):
-    hitrost: float = 0.01
+	hitrost: float = 0.01
 
-    def levo(self):
-        self.x -= self.hitrost
+	def levo(self):
+		self.x -= self.hitrost
 
-    def desno(self):
-        self.x += self.hitrost
+	def desno(self):
+		self.x += self.hitrost
